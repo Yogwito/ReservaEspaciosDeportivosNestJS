@@ -2,7 +2,7 @@ import { IsString, IsOptional } from 'class-validator';
 
 export class ProcessPaymentDto {
   @IsString()
-  paymentToken: string;
+  paymentToken!: string;
 
   @IsOptional()
   @IsString()
