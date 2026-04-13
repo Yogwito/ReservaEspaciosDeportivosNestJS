@@ -1,98 +1,366 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Reserva Espacios Deportivos API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend en NestJS para gestionar usuarios, autenticación, deportes, espacios deportivos, reservas y un flujo de pago simulado.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Estado actual
 
-## Description
+La aplicación hoy incluye:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Autenticación con email y contraseña.
+- Verificación de correo por código de 6 dígitos.
+- JWT para proteger rutas privadas.
+- Flujo de 2FA con TOTP y QR.
+- Roles `admin` y `user`.
+- CRUD de usuarios, deportes, espacios y reservas.
+- Reglas de negocio para evitar reservas inválidas.
+- Pago simulado con referencia generada en backend.
+- Notificación opcional por Telegram al confirmar un pago.
+- Envío de correos con SMTP para verificación y primer inicio de sesión.
 
-## Project setup
+## Stack
 
-```bash
-$ npm install
-```
+- NestJS 11
+- TypeORM
+- MySQL
+- Passport + JWT
+- class-validator / class-transformer
+- Nodemailer
+- otplib + qrcode
 
-## Compile and run the project
+## Módulos principales
 
-```bash
-# development
-$ npm run start
+- `auth`: registro, login, verificación de correo, 2FA.
+- `users`: gestión de usuarios.
+- `sports`: deportes y franjas horarias permitidas.
+- `spaces`: espacios deportivos y deportes permitidos por espacio.
+- `reservations`: creación, consulta, actualización, cancelación y pago de reservas.
+- `payment`: pago mock y referencia de pago.
+- `mail`: envío de correos SMTP.
 
-# watch mode
-$ npm run start:dev
+## Requisitos
 
-# production mode
-$ npm run start:prod
-```
+- Node.js 18 o superior
+- npm
+- MySQL disponible local o remotamente
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Instalación
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Variables de entorno
 
-## Resources
+El proyecto lee configuración desde `.env`.
 
-Check out a few resources that may come in handy when working with NestJS:
+Ejemplo mínimo:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```env
+PORT=3000
 
-## Support
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=
+DB_NAME=reserva_deportiva
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+JWT_SECRET=change-me-in-production
+JWT_EXPIRES_IN=7d
+JWT_2FA_SECRET=change-2fa-secret-in-production
+JWT_2FA_EXPIRES_IN=5m
 
-## Stay in touch
+TWO_FACTOR_APP_NAME=SportsFacility
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USER=your-email@gmail.com
+MAIL_PASS=your-app-password
+MAIL_FROM=your-email@gmail.com
 
-## License
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Variables usadas actualmente:
+
+| Variable | Descripción |
+| --- | --- |
+| `PORT` | Puerto HTTP de la API |
+| `DB_HOST` | Host de MySQL |
+| `DB_PORT` | Puerto de MySQL |
+| `DB_USERNAME` | Usuario de base de datos |
+| `DB_PASSWORD` | Contraseña de base de datos |
+| `DB_NAME` | Nombre de la base de datos |
+| `JWT_SECRET` | Secreto para access tokens |
+| `JWT_EXPIRES_IN` | Tiempo de expiración del JWT |
+| `JWT_2FA_SECRET` | Secreto adicional para flujo 2FA |
+| `JWT_2FA_EXPIRES_IN` | Tiempo de expiración del token 2FA |
+| `TWO_FACTOR_APP_NAME` | Nombre mostrado en apps TOTP |
+| `MAIL_HOST` | Servidor SMTP |
+| `MAIL_PORT` | Puerto SMTP |
+| `MAIL_USER` | Usuario SMTP |
+| `MAIL_PASS` | Contraseña SMTP |
+| `MAIL_FROM` | Remitente por defecto |
+| `TELEGRAM_BOT_TOKEN` | Habilita validación previa de notificaciones Telegram |
+| `TELEGRAM_CHAT_ID` | Chat destino para pagos confirmados |
+
+## Ejecución
+
+```bash
+# desarrollo
+npm run start:dev
+
+# modo normal
+npm run start
+
+# compilación
+npm run build
+
+# producción
+npm run start:prod
+```
+
+## Scripts útiles
+
+```bash
+npm run lint
+npm run test
+npm run test:watch
+npm run test:cov
+npm run test:e2e
+```
+
+## Configuración de base de datos
+
+La aplicación usa `TypeOrmModule.forRootAsync(...)` con estas decisiones:
+
+- motor: `mysql`
+- `autoLoadEntities: true`
+- `synchronize: true`
+
+`synchronize: true` es cómodo en desarrollo, pero no debería usarse tal cual en producción.
+
+## Modelo de dominio
+
+### Usuarios
+
+- Tienen rol `admin` o `user`.
+- El correo es único.
+- El password se guarda hasheado con `bcrypt`.
+- Se almacena estado de verificación de correo.
+- Se almacena estado y secreto de 2FA.
+
+### Deportes
+
+- Cada deporte define uno o más rangos horarios permitidos.
+- Una reserva solo es válida si su rango está completamente contenido dentro de uno de esos slots.
+
+### Espacios
+
+- Tienen nombre, ubicación, capacidad y tarifa por hora por persona.
+- Cada espacio define qué deportes están permitidos.
+
+### Reservas
+
+Cada reserva guarda:
+
+- usuario
+- espacio
+- deporte
+- fecha
+- hora de inicio
+- hora de fin
+- número de personas
+- precio unitario
+- valor total
+- estado de reserva
+- estado de pago
+
+Estados de reserva actuales:
+
+- `pending_payment`
+- `active`
+- `cancelled`
+- `completed`
+
+Estados de pago actuales:
+
+- `pending`
+- `processing`
+- `confirmed`
+- `failed`
+- `refunded`
+
+## Reglas de negocio de reservas
+
+Al crear o actualizar una reserva, el backend valida:
+
+- `startTime < endTime`
+- el deporte debe estar permitido en el espacio
+- el horario debe estar dentro de los slots del deporte
+- `numPeople` no puede exceder la capacidad del espacio
+- no puede existir traslape con otra reserva del mismo espacio y fecha, excepto si la otra está cancelada
+
+El valor total se calcula en backend:
+
+```text
+totalValue = hourlyRate * duración_en_horas * numPeople
+```
+
+## Flujo de autenticación actual
+
+### Registro
+
+`POST /auth/register`
+
+- crea el usuario
+- genera un código de verificación de 6 dígitos
+- guarda expiración de 15 minutos
+- envía correo de verificación
+
+### Verificación de correo
+
+`POST /auth/verify-email`
+
+- recibe `userId` y `code`
+- marca el usuario como verificado
+- devuelve `accessToken`
+
+### Login
+
+`POST /auth/login`
+
+- usa `LocalAuthGuard`
+- valida email y contraseña
+- devuelve `accessToken`
+- si aplica el flujo de 2FA, devuelve `requiresTwoFactor`
+
+### 2FA
+
+Endpoints disponibles:
+
+- `POST /auth/2fa/generate`
+- `POST /auth/2fa/enable`
+- `POST /auth/2fa/disable`
+- `POST /auth/2fa/authenticate`
+
+El endpoint de generación devuelve:
+
+- secreto TOTP
+- `otpauthUrl`
+- QR en base64
+
+## Endpoints principales
+
+### Auth
+
+- `POST /auth/register`
+- `POST /auth/verify-email`
+- `POST /auth/login`
+- `POST /auth/2fa/generate`
+- `POST /auth/2fa/enable`
+- `POST /auth/2fa/disable`
+- `POST /auth/2fa/authenticate`
+
+### Users
+
+- `POST /users`
+- `GET /users`
+- `GET /users/:id`
+- `PATCH /users/:id`
+- `DELETE /users/:id`
+
+### Sports
+
+- `POST /sports`
+- `GET /sports`
+- `GET /sports/:id`
+- `PATCH /sports/:id`
+- `DELETE /sports/:id`
+
+### Spaces
+
+- `POST /spaces`
+- `GET /spaces`
+- `GET /spaces/:id`
+- `PATCH /spaces/:id`
+- `DELETE /spaces/:id`
+
+### Reservations
+
+- `POST /reservations`
+- `GET /reservations`
+- `GET /reservations/:id`
+- `PATCH /reservations/:id`
+- `PATCH /reservations/:id/cancel`
+- `POST /reservations/:id/pay`
+- `DELETE /reservations/:id`
+
+## Roles y permisos
+
+- `admin` puede gestionar usuarios, deportes y espacios.
+- `admin` puede ver todas las reservas.
+- `user` solo puede ver y operar sobre sus propias reservas.
+- Varias rutas privadas requieren `Authorization: Bearer <token>`.
+
+## Pago simulado
+
+El pago no se conecta a una pasarela real.
+
+`POST /reservations/:id/pay`
+
+- confirma el pago
+- genera una referencia UUID en backend
+- cambia la reserva a `active`
+- si el token empieza por `fail_`, el backend simula rechazo
+- intenta enviar una notificación por Telegram si está configurado
+
+Body esperado:
+
+```json
+{
+  "paymentToken": "tok_demo_ok",
+  "currency": "COP"
+}
+```
+
+## Correo
+
+El módulo `mail` envía:
+
+- correo de verificación de cuenta
+- correo de primer inicio de sesión
+
+Si el SMTP no está bien configurado, el flujo puede fallar al registrar o solo dejar un warning, según el caso.
+
+## Postman
+
+El repositorio incluye una colección en:
+
+```text
+postman/postman.json
+```
+
+## Estructura del proyecto
+
+```text
+src/
+  auth/
+  common/
+  config/
+  mail/
+  middleware/
+  payment/
+  reservations/
+  spaces/
+  sports/
+  users/
+  main.ts
+```
+
+## Notas importantes
+
+- Los IDs actuales son UUID.
+- La ruta raíz `GET /` sigue devolviendo el mensaje base del starter.
+- El lint del proyecto todavía tiene hallazgos pendientes fuera de la documentación.
+- La documentación de Nest por defecto ya no describe el estado real de esta API; este README sí.
