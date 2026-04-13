@@ -35,8 +35,20 @@ export class AuthService {
 
   async register(dto: RegisterDto) {
     const user = await this.usersService.create(dto);
-    const accessToken = this.signJwt(user);
-    return { user, accessToken };
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = Date.now() + 15 * 60 * 1000;
+    await this.usersService.setVerificationCode(user.id, code, expiry);
+    await this.mailService.sendVerificationEmail(user.email, code);
+    return {
+      message: 'Registro exitoso. Revisa tu correo para obtener el código de verificación.',
+      userId: user.id,
+    };
+  }
+
+  async verifyEmail(userId: string, code: string) {
+    await this.usersService.verifyEmail(userId, code);
+    const user = await this.usersService.findOne(userId);
+    return { user, accessToken: this.signJwt(user) };
   }
 
   async login(user: User) {

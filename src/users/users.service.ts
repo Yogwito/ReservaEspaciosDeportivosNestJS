@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -76,5 +77,32 @@ export class UsersService {
   /** Marca que el usuario ya completó su primer login con 2FA */
   async markFirstLoginDone(id: string): Promise<void> {
     await this.usersRepository.update(id, { firstLoginDone: true });
+  }
+
+  async setVerificationCode(
+    id: string,
+    code: string,
+    expiry: number,
+  ): Promise<void> {
+    await this.usersRepository.update(id, {
+      emailVerificationCode: code,
+      emailVerificationExpiry: expiry,
+    });
+  }
+
+  async verifyEmail(id: string, code: string): Promise<void> {
+    const user = await this.findOne(id);
+    if (
+      user.emailVerificationCode !== code ||
+      !user.emailVerificationExpiry ||
+      Date.now() > Number(user.emailVerificationExpiry)
+    ) {
+      throw new BadRequestException('Invalid or expired verification code');
+    }
+    await this.usersRepository.update(id, {
+      isEmailVerified: true,
+      emailVerificationCode: null,
+      emailVerificationExpiry: null,
+    });
   }
 }

@@ -38,6 +38,15 @@ export class User {
   @Column({ default: false })
   firstLoginDone: boolean;
 
+  @Column({ default: false })
+  isEmailVerified: boolean;
+
+  @Column({ nullable: true, type: 'text' })
+  emailVerificationCode: string | null;
+
+  @Column({ nullable: true, type: 'bigint' })
+  emailVerificationExpiry: number | null;
+
   // Circular ref resolved lazily — import as string to avoid circular deps
   @OneToMany('Reservation', 'user')
   reservations: any[];

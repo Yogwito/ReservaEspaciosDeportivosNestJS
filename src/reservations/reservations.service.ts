@@ -210,7 +210,6 @@ export class ReservationsService {
       // Usamos el totalValue calculado en el backend, ignoramos el amount del body
       const result = await this.paymentService.processPayment({
         paymentToken: paymentDto.paymentToken,
-        amount: reservation.totalValue,
         currency: paymentDto.currency,
       });
 
@@ -223,6 +222,7 @@ export class ReservationsService {
       await this.telegramService.sendPaymentNotification(
         reservation.id,
         reservation.totalValue,
+        user.email,
       );
 
       return saved;

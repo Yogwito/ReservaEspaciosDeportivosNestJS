@@ -1,0 +1,401 @@
+{
+  "info": {
+    "name": "Reserva de Espacios Deportivos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Perez\",\n  \"email\": \"juan@test.com\",\n  \"password\": \"Password123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.accessToken) pm.collectionVariables.set('token', res.accessToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan@test.com\",\n  \"password\": \"Password123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2FA - Generate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/auth/2fa/generate"
+          }
+        },
+        {
+          "name": "2FA - Enable",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/auth/2fa/enable",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2FA - Disable",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/auth/2fa/disable",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2FA - Authenticate (primer login)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.accessToken) pm.collectionVariables.set('token', res.accessToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/auth/2fa/authenticate",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"123456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/users"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/users/1"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/users/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Actualizado\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/users/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sports",
+      "item": [
+        {
+          "name": "Create Sport",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol\",\n  \"allowedStartTime\": \"06:00\",\n  \"allowedEndTime\": \"22:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Sports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/sports"
+          }
+        },
+        {
+          "name": "Get Sport by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/sports/1"
+          }
+        },
+        {
+          "name": "Update Sport",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/sports/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"allowedEndTime\": \"23:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Sport",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/sports/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Spaces",
+      "item": [
+        {
+          "name": "Create Space",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/spaces",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cancha Norte\",\n  \"location\": \"Sede Principal, Bloque A\",\n  \"capacity\": 20,\n  \"hourlyRate\": 50000,\n  \"sportIds\": [1]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Spaces",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/spaces"
+          }
+        },
+        {
+          "name": "Get Space by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/spaces/1"
+          }
+        },
+        {
+          "name": "Update Space",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/spaces/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 25,\n  \"hourlyRate\": 60000\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Space",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/spaces/1"
+          }
+        },
+        {
+          "name": "Get Total Reservations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/spaces/1/total-reservations"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/reservations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"spaceId\": 1,\n  \"sportId\": 1,\n  \"date\": \"2026-04-20\",\n  \"startTime\": \"08:00\",\n  \"endTime\": \"10:00\",\n  \"numPeople\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Reservations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reservations"
+          }
+        },
+        {
+          "name": "Get Reservation by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reservations/1"
+          }
+        },
+        {
+          "name": "Update Reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/reservations/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startTime\": \"09:00\",\n  \"endTime\": \"11:00\",\n  \"numPeople\": 8\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reservations/1/cancel"
+          }
+        },
+        {
+          "name": "Pay Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/reservations/1/pay",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": \"COP\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Reservation",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reservations/1"
+          }
+        },
+        {
+          "name": "⚠️ Traslape - Crear reserva en mismo horario",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/reservations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"spaceId\": 1,\n  \"sportId\": 1,\n  \"date\": \"2026-04-20\",\n  \"startTime\": \"08:30\",\n  \"endTime\": \"09:30\",\n  \"numPeople\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "⚠️ Capacidad - Exceder límite",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/reservations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"spaceId\": 1,\n  \"sportId\": 1,\n  \"date\": \"2026-04-21\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"12:00\",\n  \"numPeople\": 999\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
