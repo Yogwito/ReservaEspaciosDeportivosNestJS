@@ -64,7 +64,12 @@ export class ReservationsService {
     this.assertCapacity(space, dto.numPeople);
 
     // ── Regla 5: no superponerse con otras reservas del mismo espacio/fecha ─
-    await this.assertNoOverlap(dto.spaceId, dto.date, dto.startTime, dto.endTime);
+    await this.assertNoOverlap(
+      dto.spaceId,
+      dto.date,
+      dto.startTime,
+      dto.endTime,
+    );
 
     // ── Calcular precio ──────────────────────────────────────────────────────
     const durationHours = (endMin - startMin) / 60;
@@ -100,7 +105,8 @@ export class ReservationsService {
       where: { id },
       relations: ['user', 'space', 'sport'],
     });
-    if (!reservation) throw new NotFoundException(`Reservation ${id} not found`);
+    if (!reservation)
+      throw new NotFoundException(`Reservation ${id} not found`);
     this.assertOwnerOrAdmin(reservation, user);
     return reservation;
   }
@@ -181,7 +187,9 @@ export class ReservationsService {
   async remove(id: string, user: User): Promise<void> {
     const reservation = await this.findOne(id, user);
     if (user.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('Only admins can permanently delete reservations');
+      throw new ForbiddenException(
+        'Only admins can permanently delete reservations',
+      );
     }
     await this.reservationsRepository.remove(reservation);
   }
@@ -261,9 +269,7 @@ export class ReservationsService {
     const conflict = existing.find((r) => {
       if (excludeId && r.id === excludeId) return false;
       // Hay traslape si: inicioExistente < nuevoFin Y finExistente > nuevoInicio
-      return (
-        toMinutes(r.startTime) < endMin && toMinutes(r.endTime) > startMin
-      );
+      return toMinutes(r.startTime) < endMin && toMinutes(r.endTime) > startMin;
     });
 
     if (conflict) {
@@ -274,7 +280,11 @@ export class ReservationsService {
   }
 
   /** Verifica que el horario esté dentro de los slots permitidos del deporte */
-  private assertTimeSlot(sport: Sport, startTime: string, endTime: string): void {
+  private assertTimeSlot(
+    sport: Sport,
+    startTime: string,
+    endTime: string,
+  ): void {
     const startMin = toMinutes(startTime);
     const endMin = toMinutes(endTime);
 

@@ -20,7 +20,9 @@ export class MailService {
   }
 
   async sendVerificationEmail(to: string, code: string): Promise<void> {
-    const from = this.configService.get<string>('mail.from') ?? this.configService.get<string>('mail.user');
+    const from =
+      this.configService.get<string>('mail.from') ??
+      this.configService.get<string>('mail.user');
     try {
       await this.transporter.sendMail({
         from,

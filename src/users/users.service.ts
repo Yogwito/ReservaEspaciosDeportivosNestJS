@@ -64,10 +64,7 @@ export class UsersService {
     await this.usersRepository.remove(user);
   }
 
-  async saveTwoFactorSecret(
-    id: string,
-    secret: string | null,
-  ): Promise<void> {
+  async saveTwoFactorSecret(id: string, secret: string | null): Promise<void> {
     await this.usersRepository.update(id, {
       twoFactorSecret: secret,
       isTwoFactorEnabled: secret !== null,

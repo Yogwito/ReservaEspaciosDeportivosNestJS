@@ -27,8 +27,7 @@ import { MailModule } from '../mail/mail.module';
         const secret =
           config.get<string>('jwt.secret') ?? 'change-me-in-production';
 
-        const expiresIn =
-          (config.get<string>('jwt.expiresIn') as any) ?? '7d';
+        const expiresIn = (config.get<string>('jwt.expiresIn') as any) ?? '7d';
 
         return {
           secret,

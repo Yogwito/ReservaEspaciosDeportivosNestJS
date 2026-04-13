@@ -40,7 +40,8 @@ export class AuthService {
     await this.usersService.setVerificationCode(user.id, code, expiry);
     await this.mailService.sendVerificationEmail(user.email, code);
     return {
-      message: 'Registro exitoso. Revisa tu correo para obtener el código de verificación.',
+      message:
+        'Registro exitoso. Revisa tu correo para obtener el código de verificación.',
       userId: user.id,
     };
   }

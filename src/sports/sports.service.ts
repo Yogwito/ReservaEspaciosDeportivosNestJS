@@ -20,7 +20,8 @@ export class SportsService {
     const existing = await this.sportsRepository.findOne({
       where: { name: dto.name },
     });
-    if (existing) throw new ConflictException(`Sport "${dto.name}" already exists`);
+    if (existing)
+      throw new ConflictException(`Sport "${dto.name}" already exists`);
     const sport = this.sportsRepository.create(dto);
     return this.sportsRepository.save(sport);
   }

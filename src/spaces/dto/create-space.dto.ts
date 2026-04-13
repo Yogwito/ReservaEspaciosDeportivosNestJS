@@ -1,4 +1,12 @@
-import { IsString, IsInt, IsNumber, Min, IsArray, IsUUID, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsInt,
+  IsNumber,
+  Min,
+  IsArray,
+  IsUUID,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateSpaceDto {
   @IsString()

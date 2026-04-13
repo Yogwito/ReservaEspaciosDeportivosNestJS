@@ -42,10 +42,7 @@ export class SpacesController {
   @Patch(':id')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: UpdateSpaceDto,
-  ) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateSpaceDto) {
     return this.spacesService.update(id, dto);
   }
 

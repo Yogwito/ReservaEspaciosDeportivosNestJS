@@ -62,10 +62,18 @@ export class Reservation {
   @Column({ type: 'float', default: 0 })
   totalValue!: number;
 
-  @Column({ default: PaymentStatus.PENDING })
+  @Column({
+    type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
+  })
   paymentStatus!: PaymentStatus;
 
-  @Column({ default: ReservationStatus.PENDING_PAYMENT })
+  @Column({
+    type: 'enum',
+    enum: ReservationStatus,
+    default: ReservationStatus.PENDING_PAYMENT,
+  })
   status!: ReservationStatus;
 
   /** Reference ID from the payment provider (mock) */

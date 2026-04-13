@@ -21,8 +21,7 @@ export class TelegramService {
     }
 
     const emailLine = userEmail ? `\nUsuario: ${userEmail}` : '';
-    const text =
-      `✅ Pago confirmado\nReserva: ${reservationId}\nTotal: $${amount.toFixed(2)}${emailLine}`;
+    const text = `✅ Pago confirmado\nReserva: ${reservationId}\nTotal: $${amount.toFixed(2)}${emailLine}`;
 
     try {
       const res = await fetch(
@@ -34,7 +33,9 @@ export class TelegramService {
         },
       );
       if (!res.ok) {
-        this.logger.error(`Telegram API error: ${res.status} ${await res.text()}`);
+        this.logger.error(
+          `Telegram API error: ${res.status} ${await res.text()}`,
+        );
       }
     } catch (err) {
       this.logger.error('Failed to send Telegram notification', err);
