@@ -13,16 +13,16 @@ import { Sport } from '../../sports/entities/sport.entity';
 @Entity('spaces')
 export class Space {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  location: string;
+  location!: string;
 
   @Column()
-  capacity: number;
+  capacity!: number;
 
   /** Sports that are allowed to be played in this space */
   @ManyToMany(() => Sport, (sport) => sport.spaces, { eager: true })
@@ -31,18 +31,18 @@ export class Space {
     joinColumn: { name: 'spaceId' },
     inverseJoinColumn: { name: 'sportId' },
   })
-  allowedSports: Sport[];
+  allowedSports!: Sport[];
 
   /** Tarifa por hora por persona */
   @Column({ type: 'float', default: 0 })
-  hourlyRate: number;
+  hourlyRate!: number;
 
   @OneToMany('Reservation', 'space')
-  reservations: any[];
+  reservations!: any[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

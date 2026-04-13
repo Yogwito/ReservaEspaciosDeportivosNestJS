@@ -17,25 +17,25 @@ export interface TimeSlot {
 @Entity('sports')
 export class Sport {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  name: string;
+  name!: string;
 
   /**
    * Stored as JSON array of { start: "HH:MM", end: "HH:MM" } objects.
    * A reservation's time window must be fully contained within one slot.
    */
   @Column({ type: 'simple-json' })
-  allowedTimeSlots: TimeSlot[];
+  allowedTimeSlots!: TimeSlot[];
 
   // Back-reference to spaces that allow this sport
   @ManyToMany('Space', 'allowedSports')
-  spaces: any[];
+  spaces!: any[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

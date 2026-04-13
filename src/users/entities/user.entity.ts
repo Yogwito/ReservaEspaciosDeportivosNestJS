@@ -12,48 +12,48 @@ import { UserRole } from '../../common/enums/user-role.enum';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Exclude()
   @Column()
-  password: string;
+  password!: string;
 
   @Column({ default: UserRole.USER })
-  role: UserRole;
+  role!: UserRole;
 
   @Exclude()
   @Column({ nullable: true, type: 'text' })
-  twoFactorSecret: string | null;
+  twoFactorSecret!: string | null;
 
   @Column({ default: false })
-  isTwoFactorEnabled: boolean;
+  isTwoFactorEnabled!: boolean;
 
   /** True después del primer login con 2FA exitoso — omite 2FA en logins siguientes */
   @Column({ default: false })
-  firstLoginDone: boolean;
+  firstLoginDone!: boolean;
 
   @Column({ default: false })
-  isEmailVerified: boolean;
+  isEmailVerified!: boolean;
 
   @Column({ nullable: true, type: 'text' })
-  emailVerificationCode: string | null;
+  emailVerificationCode!: string | null;
 
   @Column({ nullable: true, type: 'bigint' })
-  emailVerificationExpiry: number | null;
+  emailVerificationExpiry!: number | null;
 
   // Circular ref resolved lazily — import as string to avoid circular deps
   @OneToMany('Reservation', 'user')
-  reservations: any[];
+  reservations!: any[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

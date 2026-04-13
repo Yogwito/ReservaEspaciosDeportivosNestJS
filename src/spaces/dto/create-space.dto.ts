@@ -2,19 +2,19 @@ import { IsString, IsInt, IsNumber, Min, IsArray, IsUUID, IsOptional } from 'cla
 
 export class CreateSpaceDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
-  location: string;
+  location!: string;
 
   @IsInt()
   @Min(1)
-  capacity: number;
+  capacity!: number;
 
   /** Precio por hora por persona */
   @IsNumber()
   @Min(0)
-  hourlyRate: number;
+  hourlyRate!: number;
 
   @IsArray()
   @IsUUID('4', { each: true })
