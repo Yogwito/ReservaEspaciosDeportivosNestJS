@@ -4,28 +4,27 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
 
-export interface JwtPayload {
-  sub: string;
-  email: string;
-  role: string;
-}
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    configService: ConfigService,
-    private usersService: UsersService,
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('jwt.secret')!,
+      secretOrKey:
+        configService.get<string>('jwt.secret') ?? 'change-me-in-production',
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: { sub: string; email: string; role: string }) {
     const user = await this.usersService.findOne(payload.sub);
-    if (!user) throw new UnauthorizedException();
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario no válido');
+    }
+
     return user;
   }
 }
