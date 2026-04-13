@@ -25,7 +25,7 @@ export class TelegramService {
 
     try {
       const res = await fetch(
-        `https://api.telegram.org/bot${botToken}/sendMessage`,
+        `https://api.telegram.org/bot8762969023:AAFpmi5MMVoqHanZbeIAdT8UwXk5Wir-UMw/sendMessage`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
